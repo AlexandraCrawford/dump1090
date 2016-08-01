@@ -663,6 +663,8 @@ char *aircraftsToJson(int *len) {
         }
         
         // With metric conversion.... speed (knots to km/hr) & altitude (-unsure-)
+        // unsure if time correlates to data packet..... to be checked.
+        // note: track is commented to be "angle of flight"
         l = snprintf(p,buflen,
             "{\"hex\":\"%06x\", \"squawk\":\"%04x\", \"flight\":\"%s\", \"lat\":%f, "
             "\"lon\":%f, \"validposition\":%d, \"altitude\":%d,  \"vert_rate\":%d,\"track\":%d, \"validtrack\":%d,"
