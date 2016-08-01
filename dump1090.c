@@ -31,10 +31,7 @@
 #include "dump1090.h"
 
 /* alex added ... global*/
-char /*msg[256],*/ * point;
-//uint32_t offsetAmt;
-struct timeInit epocTime_Now;
-struct timeFin stTime_Now;
+//char msg[256], * point;
 
 //
 // ============================= Utility functions ==========================
@@ -260,6 +257,8 @@ void modesInitRTLSDR(void) {
 // A Mutex is used to avoid races with the decoding thread.
 //
 void rtlsdrCallback(unsigned char *buf, uint32_t len, void *ctx) {
+    //struct time epocTime_Now;
+    //struct time stTime_Now;
     
     MODES_NOTUSED(ctx);
 
@@ -269,15 +268,16 @@ void rtlsdrCallback(unsigned char *buf, uint32_t len, void *ctx) {
     Modes.iDataIn &= (MODES_ASYNC_BUF_NUMBER-1); // Just incase!!!
 
     // Get the system time for this block
-    //ftime(&Modes.stSystemTimeRTL[Modes.iDataIn]);
+    ftime(&Modes.stSystemTimeRTL[Modes.iDataIn]);
+    
     
     /* alex added this block in to find the system time and process into a format to put into json*/
     // Find current system time
-    ftime(&epocTime_Now);                          // get the current system time & date
+  /*  ftime(&epocTime_Now);                          // get the current system time & date
     stTime_Now = *localtime(&epocTime_Now.time);
     sprintf(point, "%04d/%02d/%02d, %02d:%02d:%02d.%03d", (stTime_Now.tm_year+1900),(stTime_Now.tm_mon+1), stTime_Now.tm_mday, 
     			stTime_Now.tm_hour, stTime_Now.tm_min, stTime_Now.tm_sec, epocTime_Now.millitm);
-//
+   */
 //
 
     if (len > MODES_ASYNC_BUF_SIZE) {len = MODES_ASYNC_BUF_SIZE;}
