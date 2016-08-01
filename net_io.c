@@ -362,7 +362,8 @@ void modesSendSBSOutput(struct modesMessage *mm) {
             epocTime_receive.time ++;                             //    ..correct the overflow
         }
         stTime_receive = *localtime(&epocTime_receive.time);
-    } else {
+    } 
+    else {
         epocTime_receive = epocTime_now;                          // We don't have a usable reception time; use the current system time
         stTime_receive = stTime_now;
     }
@@ -633,7 +634,7 @@ int decodeHexMessage(struct client *c, char *hex) {
 //
 //=========================================================================
 //
-// Return a description of planes in json. No metric conversion
+// Return a description of planes in json. Metric conversion
 //
 char *aircraftsToJson(int *len) {
     time_t now = time(NULL);
@@ -661,13 +662,13 @@ char *aircraftsToJson(int *len) {
             track = 1;
         }
         
-        // No metric conversion
+        // With metric conversion.... speed (knots to km/hr) & altitude (-unsure-)
         l = snprintf(p,buflen,
             "{\"hex\":\"%06x\", \"squawk\":\"%04x\", \"flight\":\"%s\", \"lat\":%f, "
             "\"lon\":%f, \"validposition\":%d, \"altitude\":%d,  \"vert_rate\":%d,\"track\":%d, \"validtrack\":%d,"
-            "\"speed\":%d, \"messages\":%ld, \"seen\":%d},\n",
-            a->addr, a->modeA, a->flight, a->lat, a->lon, position, a->altitude, a->vert_rate, a->track, track,
-            a->speed, a->messages, (int)(now - a->seen));
+            "\"speed\":%d, \"messages\":%ld, \"seen\":%d, \"time\":%ls},\n",
+            a->addr, a->modeA, a->flight, a->lat, a->lon, position, (double)(a->altitude / 3.2828), a->vert_rate, a->track, track,
+            (double)(a->speed* 1.852), a->messages, (int)(now - a->seen), *point);
         p += l; buflen -= l;
         
         //Resize if needed
